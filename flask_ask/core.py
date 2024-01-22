@@ -7,10 +7,10 @@ from datetime import datetime
 from functools import wraps, partial
 
 import aniso8601
-from werkzeug.contrib.cache import SimpleCache
+from cachelib import SimpleCache
 from werkzeug.local import LocalProxy, LocalStack
 from jinja2 import BaseLoader, ChoiceLoader, TemplateNotFound
-from flask import current_app, json, request as flask_request, _app_ctx_stack
+from flask import current_app, json, request as flask_request, g
 
 from . import verifier, logger
 from .convert import to_date, to_time, to_timedelta
@@ -524,47 +524,47 @@ class Ask(object):
 
     @property
     def request(self):
-        return getattr(_app_ctx_stack.top, '_ask_request', None)
+        return getattr(g, '_ask_request', None)
 
     @request.setter
     def request(self, value):
-        _app_ctx_stack.top._ask_request = value
+        g._ask_request = value
 
     @property
     def session(self):
-        return getattr(_app_ctx_stack.top, '_ask_session', models._Field())
+        return getattr(g, '_ask_session', models._Field())
 
     @session.setter
     def session(self, value):
-        _app_ctx_stack.top._ask_session = value
+        g._ask_session = value
 
     @property
     def version(self):
-        return getattr(_app_ctx_stack.top, '_ask_version', None)
+        return getattr(g, '_ask_version', None)
 
     @version.setter
     def version(self, value):
-        _app_ctx_stack.top._ask_version = value
+        g._ask_version = value
 
     @property
     def context(self):
-        return getattr(_app_ctx_stack.top, '_ask_context', None)
+        return getattr(g, '_ask_context', None)
 
     @context.setter
     def context(self, value):
-        _app_ctx_stack.top._ask_context = value
+        g._ask_context = value
 
     @property
     def convert_errors(self):
-        return getattr(_app_ctx_stack.top, '_ask_convert_errors', None)
+        return getattr(g, '_ask_convert_errors', None)
 
     @convert_errors.setter
     def convert_errors(self, value):
-        _app_ctx_stack.top._ask_convert_errors = value
+        g._ask_convert_errors = value
 
     @property
     def current_stream(self):
-        #return getattr(_app_ctx_stack.top, '_ask_current_stream', models._Field())
+        #return getattr(g, '_ask_current_stream', models._Field())
         user = self._get_user()
         if user:
             stream = top_stream(self.stream_cache, user)

@@ -1,5 +1,5 @@
 -r requirements.txt
-mock==2.0.0
-requests==2.13.0
+mock==5.1.0
+Requests==2.31.0
 tox==2.7.0
 
